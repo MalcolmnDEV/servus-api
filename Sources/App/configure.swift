@@ -40,7 +40,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     func configDBProduction() -> PostgreSQLDatabaseConfig{
         
-        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "horton.elephantsql.com"
         let port: Int
         if let testPort = Environment.get("DATABASE_PORT") {
             port = Int(testPort) ?? 5432
@@ -48,9 +48,9 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
             port = 5432
         }
         
-        let username = Environment.get("DATABASE_USER") ?? "malcolmnroberts"
-        let db = Environment.get("DATABASE_DB") ?? "servus_dev"
-        let pw = Environment.get("DATABASE_PASSWORD") ?? nil
+        let username = Environment.get("DATABASE_USER") ?? "vwtdhmll"
+        let db = Environment.get("DATABASE_DB") ?? "vwtdhmll"
+        let pw = Environment.get("DATABASE_PASSWORD") ?? "uEtMFj_lHHuwILxa9Hie-ExriohcKlUb"
         
         return PostgreSQLDatabaseConfig(hostname: hostname,
                                         port: port,
