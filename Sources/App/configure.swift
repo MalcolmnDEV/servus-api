@@ -25,45 +25,62 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
     
-    //    if env == .production {
-    //        let serverConfiure = NIOServerConfig.default(hostname: "0.0.0.0", port: 3000)
-    //        services.register(serverConfiure)
-    //    }
+//        if env == .production {
+//            let serverConfiure = NIOServerConfig.default(hostname: "0.0.0.0", port: 3000)
+//            services.register(serverConfiure)
+//        }
     
-    func configDBDev() -> PostgreSQLDatabaseConfig{
-        return PostgreSQLDatabaseConfig(hostname: "localhost",
-                                        port: 5432,
-                                        username: "malcolmnroberts",
-                                        database: "servus_dev",
-                                        password: nil)
+//    func configDBDev() -> PostgreSQLDatabaseConfig{
+//        return PostgreSQLDatabaseConfig(hostname: "localhost",
+//                                        port: 5432,
+//                                        username: "malcolmnroberts",
+//                                        database: "servus_dev",
+//                                        password: nil)
+//    }
+//
+//    func configDBProduction() -> PostgreSQLDatabaseConfig{
+//
+//        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "horton.elephantsql.com"
+//        let port: Int
+//        if let testPort = Environment.get("DATABASE_PORT") {
+//            port = Int(testPort) ?? 5432
+//        } else {
+//            port = 5432
+//        }
+//
+//        let username = Environment.get("DATABASE_USER") ?? "vwtdhmll"
+//        let db = Environment.get("DATABASE_DB") ?? "vwtdhmll"
+//        let pw = Environment.get("DATABASE_PASSWORD") ?? "uEtMFj_lHHuwILxa9Hie-ExriohcKlUb"
+//
+//        return PostgreSQLDatabaseConfig(hostname: hostname,
+//                                        port: port,
+//                                        username: username,
+//                                        database: db,
+//                                        password: pw)
+//    }
+    
+    let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+    let port: Int
+    if let testPort = Environment.get("DATABASE_PORT") {
+        port = Int(testPort) ?? 5432
+    } else {
+        port = 5432
     }
     
-    func configDBProduction() -> PostgreSQLDatabaseConfig{
-        
-        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "horton.elephantsql.com"
-        let port: Int
-        if let testPort = Environment.get("DATABASE_PORT") {
-            port = Int(testPort) ?? 5432
-        } else {
-            port = 5432
-        }
-        
-        let username = Environment.get("DATABASE_USER") ?? "vwtdhmll"
-        let db = Environment.get("DATABASE_DB") ?? "vwtdhmll"
-        let pw = Environment.get("DATABASE_PASSWORD") ?? "uEtMFj_lHHuwILxa9Hie-ExriohcKlUb"
-        
-        return PostgreSQLDatabaseConfig(hostname: hostname,
-                                        port: port,
-                                        username: username,
-                                        database: db,
-                                        password: pw)
-    }
+    let username = Environment.get("DATABASE_USER") ?? "malcolmnroberts"
+    let db = Environment.get("DATABASE_DB") ?? "servus_dev"
+    let pw = Environment.get("DATABASE_PASSWORD") ?? nil
     
+    let database = PostgreSQLDatabase(config: PostgreSQLDatabaseConfig(hostname: hostname,
+                                                                       port: port,
+                                                                       username: username,
+                                                                       database: db,
+                                                                       password: pw))
     
     
     // Configure a PostgreSQL database
     
-    let database = PostgreSQLDatabase(config: env == .production ? configDBProduction() : configDBDev())
+//    let database = PostgreSQLDatabase(config: env == .production ? configDBProduction() : configDBDev())
     
     /// Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
