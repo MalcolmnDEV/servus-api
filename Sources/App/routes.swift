@@ -8,7 +8,7 @@ public func routes(_ router: Router) throws {
     
     // Basic "Hello, world!" example
     router.get("/") { req in
-        return "Welcome to serv.us backend"
+        return "Welcome to serv.us backend .... coming soon"
     }
     
     let userController = UserController()
