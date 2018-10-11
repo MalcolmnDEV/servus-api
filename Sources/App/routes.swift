@@ -6,7 +6,6 @@ public func routes(_ router: Router) throws {
     
     let baseEndpoint = "/api/v1/"
     
-    // Basic "Hello, world!" example
     router.get("/") { req in
         return "Welcome to serv.us backend .... coming soon"
     }
@@ -19,8 +18,6 @@ public func routes(_ router: Router) throws {
     router.get("/login", use: userController.getLoginView)
     
     //public
-    //    router.get(baseEndpoint + "users", use: userController.viewAll)
-    
     router.post(baseEndpoint + "signup", use: userController.createUser)
     
     let basic = router.grouped(User.basicAuthMiddleware(using: BCryptDigest()))
@@ -36,11 +33,4 @@ public func routes(_ router: Router) throws {
     basic.group(baseEndpoint + "organisation") { (organisation) in
         organisation.post("create", use: organisationController.create)
     }
-    //
-    //    // bearer / token auth protected routes
-    //    let bearer = router.grouped(User.tokenAuthMiddleware())
-    //    let todoController = TodoController()
-    //    bearer.get("todos", use: todoController.index)
-    //    bearer.post("todos", use: todoController.create)
-    //    bearer.delete("todos", Todo.parameter, use: todoController.delete)
 }

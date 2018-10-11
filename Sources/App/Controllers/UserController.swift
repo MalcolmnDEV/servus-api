@@ -15,10 +15,6 @@ final class UserController {
             guard (userTokenType?.token) != nil else { throw Abort.init(HTTPResponseStatus.notFound) }
             return User.query(on: req).all()
         }
-//        return try user.authTokens.query(on: req).first().map(to: User.Public.self) { userTokenType in
-//            guard let tokenType = userTokenType?.token else { throw Abort.init(HTTPResponseStatus.notFound) }
-//            return User.query(on: req).all()
-//        }
     }
     
 //    func viewAll(_ req: Request) throws -> Future<View>{
@@ -50,13 +46,6 @@ final class UserController {
             user.password = passwordHash
             return user.save(on: req).convertToPublic()
         }
-        
-        
-//        user.password = try BCrypt.hash(user.password)
-//        return user.save(on: req).convertToPublic()
-        
-        
-        
     }
     
     func getLoginView(_ req: Request) throws -> Future<View>{
