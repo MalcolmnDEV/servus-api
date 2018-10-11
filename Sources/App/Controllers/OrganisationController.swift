@@ -8,17 +8,29 @@
 import Foundation
 import Vapor
 import FluentPostgreSQL
+import Crypto
 
-final class OrganisationController{
+final class OrganisationController: RouteCollection{
     
+    // RouteCollection protocol
+    func boot(router: Router) throws {
+        
+        let route = router.grouped(Constants.baseURL, "organisation")
+        let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
+        
+        tokenAuthGroup.get("index", use: index)
+        tokenAuthGroup.post(Organisation.self ,use: create)
+        tokenAuthGroup.get(Organisation.parameter, use: getWithID)
+        tokenAuthGroup.delete("delete", use: delete)
+    }
+
+    // Controller Functions
     func index(_ req: Request) throws -> Future<[Organisation]>{
         return Organisation.query(on: req).all()
     }
     
-    func create(_ req: Request) throws -> Future<Organisation>{
-        return try req.content.decode(Organisation.self).flatMap { temp in
-            return temp.save(on: req)
-        }
+    func create(_ req: Request, organisation: Organisation) throws -> Future<Organisation>{
+        return organisation.save(on: req)
     }
     
     func getWithID(_ req: Request) throws -> Future<Organisation>{
@@ -30,5 +42,4 @@ final class OrganisationController{
             return temp.delete(on: req)
             }.transform(to: .ok)
     }
-    
 }

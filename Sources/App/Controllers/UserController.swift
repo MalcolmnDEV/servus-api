@@ -8,13 +8,33 @@
 import Vapor
 import Crypto
 
-final class UserController {
+final class UserController: RouteCollection {
+    func boot(router: Router) throws {
+        
+        /*
+         Sign up User
+         */
+        router.post(Constants.baseURL + "signup", use: createUser)
+        
+        // Views
+        router.get("/register", use: getRegisterView)
+        router.get("/login", use: getLoginView)
+        
+        /*
+         User group end points in this group have format user/...
+         */
+        let route = router.grouped(Constants.baseURL, "user")
+        
+        let basicAuthGroup = route.grouped(User.basicAuthMiddleware(using: BCryptDigest()))
+        basicAuthGroup.post("login", use: loginUser)
+        
+        let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
+        tokenAuthGroup.post("index", use: index)
+        tokenAuthGroup.delete("delete", use: delete)
+    }
+    
     func index(_ req: Request) throws -> Future<[User]> {
-        let user = try req.requireAuthenticated(User.self)
-        return try user.authTokens.query(on: req).first().flatMap(to: [User].self) { userTokenType in
-            guard (userTokenType?.token) != nil else { throw Abort.init(HTTPResponseStatus.notFound) }
-            return User.query(on: req).all()
-        }
+        return User.query(on: req).all()
     }
     
 //    func viewAll(_ req: Request) throws -> Future<View>{
@@ -29,18 +49,6 @@ final class UserController {
     }
     
     func createUser(_ req: Request) throws -> Future<User.Public> {
-//        return try request.content.decode(User.self).flatMap(to: User.PublicUser.self) { user in
-//            let passwordHashed = try request.make(BCryptDigest.self).hash(user.password)
-//            let newUser = User(username: user.username, password: passwordHashed)
-//            return newUser.save(on: request).flatMap(to: User.PublicUser.self) { createdUser in
-//                let accessToken = try Token.createToken(forUser: createdUser)
-//                return accessToken.save(on: request).map(to: User.PublicUser.self) { createdToken in
-//                    let publicUser = User.PublicUser(username: createdUser.username, token: createdToken.token)
-//                    return publicUser
-//                }
-//            }
-//        }
-        
         return try req.content.decode(User.self).flatMap(to: User.Public.self) { user in
             let passwordHash = try req.make(BCryptDigest.self).hash(user.password)
             user.password = passwordHash
@@ -53,28 +61,6 @@ final class UserController {
     }
     
     func loginUser(_ req: Request) throws -> Future<Token> {
-//        return try request.content.decode(User.self).flatMap(to: User.self) { user in
-//            let passwordVerifier = try request.make(BCryptDigest.self)
-//            return User.authenticate(username: user.username, password: user.password, using: passwordVerifier, on: request).unwrap(or: Abort.init(HTTPResponseStatus.unauthorized))
-//        }
-        
-//        return try req.content.decode(User.LoginUser.self).flatMap(to: User.self) { user in
-//            let psVerifier = try req.make(BCryptDigest.self)
-//            let basicAuth = BasicAuthorization(username: user.username, password: user.password)
-//
-//            return User.authenticate(using: basicAuth, verifier: psVerifier, on: req).unwrap(or: Abort.init(.unauthorized))
-//            let authUser = User.authenticate(using: basicAuth, verifier: psVerifier, on: req).unwrap(or: Abort.init(.unauthorized))
-//            let token = try Token.generate(for: user)
-//            return token.save(on: req)
-            
-//            return User.LoginUser(user: authUser.flatMap(to: User.Public, <#(T) throws -> EventLoopFuture<T>#>), token: token)
-            
-//            return try User.authenticate(using: basicAuth, verifier: psVerifier, on: req)
-//            let tempUser = User.authenticate(username: user.username, password: user.password, using: psVerifier, on: req)
-//            let token = try Token.generate(for: tempUser)
-//            return token.save(on: req)
-//        }
-        
         let user = try req.requireAuthenticated(User.self)
         let token = try Token.generate(for: user)
         return token.save(on: req)

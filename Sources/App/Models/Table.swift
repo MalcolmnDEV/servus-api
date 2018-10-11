@@ -10,9 +10,26 @@ import Vapor
 
 final class Table: PostgreSQLModel {
     var id: Int?
+    var tableNumber: Int
     
-    init(id: Int? = nil) {
+    init(id: Int? = nil, tableNumber: Int) {
         self.id = id
+        self.tableNumber = tableNumber
+    }
+}
+
+struct migrateTableModel: PostgreSQLMigration {
+    
+    static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
+        return Database.update(Table.self, on: connection) { builder in
+            builder.field(for: \.tableNumber)
+        }
+    }
+    
+    static func revert(on conn: PostgreSQLConnection) -> EventLoopFuture<Void> {
+        return Database.update(Table.self, on: conn) { builder in
+            builder.deleteField(for: \.tableNumber)
+        }
     }
 }
 
