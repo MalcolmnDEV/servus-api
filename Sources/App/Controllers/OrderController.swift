@@ -9,14 +9,27 @@ import Foundation
 import Vapor
 import FluentPostgreSQL
 
-final class OrderController{
+final class OrderController: RouteCollection{
     
+    // RouteCollection protocol
+    func boot(router: Router) throws {
+        
+        let route = router.grouped(Constants.baseURL, "order")
+        let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
+        
+        tokenAuthGroup.get("index", use: index)
+        tokenAuthGroup.post(Order.self ,use: create)
+        tokenAuthGroup.get(Order.parameter, use: getWithID)
+        tokenAuthGroup.delete("delete", use: delete)
+    }
+    
+    // Controller Functions
     func index(_ req: Request) throws -> Future<[Order]>{
         return Order.query(on: req).all()
     }
     
-    func create(_ req: Request, order: Order) throws -> Future<Order>{
-        return order.save(on: req)
+    func create(_ req: Request, organisation: Order) throws -> Future<Order>{
+        return organisation.save(on: req)
     }
     
     func getWithID(_ req: Request) throws -> Future<Order>{

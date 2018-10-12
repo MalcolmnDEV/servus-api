@@ -9,14 +9,27 @@ import Foundation
 import Vapor
 import FluentPostgreSQL
 
-final class MenuController{
+final class MenuController: RouteCollection{
     
+    // RouteCollection protocol
+    func boot(router: Router) throws {
+        
+        let route = router.grouped(Constants.baseURL, "Menu")
+        let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
+        
+        tokenAuthGroup.get("index", use: index)
+        tokenAuthGroup.post(Menu.self ,use: create)
+        tokenAuthGroup.get(Menu.parameter, use: getWithID)
+        tokenAuthGroup.delete("delete", use: delete)
+    }
+    
+    // Controller Functions
     func index(_ req: Request) throws -> Future<[Menu]>{
         return Menu.query(on: req).all()
     }
     
-    func create(_ req: Request, menu: Menu) throws -> Future<Menu>{
-        return menu.save(on: req)
+    func create(_ req: Request, organisation: Menu) throws -> Future<Menu>{
+        return organisation.save(on: req)
     }
     
     func getWithID(_ req: Request) throws -> Future<Menu>{
@@ -28,5 +41,4 @@ final class MenuController{
             return temp.delete(on: req)
             }.transform(to: .ok)
     }
-    
 }
