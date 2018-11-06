@@ -22,9 +22,10 @@ final class OrganisationController: RouteCollection{
         tokenAuthGroup.post(Organisation.self ,use: create)
         tokenAuthGroup.get(Organisation.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
+        tokenAuthGroup.get("restaurants", use: getRestaurants)
     }
 
-    // Controller Functions
+    //MARK:- Controller Default Functions
     func index(_ req: Request) throws -> Future<[Organisation]>{
         return Organisation.query(on: req).all()
     }
@@ -41,5 +42,14 @@ final class OrganisationController: RouteCollection{
         return try req.parameters.next(Organisation.self).flatMap { temp in
             return temp.delete(on: req)
             }.transform(to: .ok)
+    }
+    
+    // MARK: - Extra functions
+    func getRestaurants(_ req: Request) throws -> Future<[Restaurant]> {
+        guard let id = req.query[Int.self, at: "organisationId"] else { throw Abort(.badRequest) }
+        return Organisation.find(id, on: req).flatMap(to: [Restaurant].self) { organisation in // 1
+            guard let unwrapped = organisation else { throw Abort.init(HTTPStatus.notFound) } // 2
+            return try unwrapped.restaurants.query(on: req).all() // 3
+        }
     }
 }

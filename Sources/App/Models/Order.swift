@@ -8,7 +8,7 @@
 import FluentPostgreSQL
 import Vapor
 
-final class Order: PostgreSQLModel {
+final class Order: PostgreSQLModel, Codable {
     var id: Int?
     
     init(id: Int? = nil) {

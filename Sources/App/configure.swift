@@ -101,6 +101,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: Menu_Item.self, database: .psql)
     migrations.add(model: Store.self, database: .psql)
     migrations.add(model: Organisation.self, database: .psql)
+    migrations.add(model: Restaurant.self, database: .psql)
     
     
     //Migrations

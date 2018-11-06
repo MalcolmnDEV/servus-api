@@ -35,6 +35,17 @@ final class TableController: RouteCollection{
         return try req.parameters.next(Table.self)
     }
     
+    func occupyTable(_ req: Request) throws -> Future<Response> {
+        return try req.parameters.next(Table.self).flatMap { table in
+            return try req.content.decode(Table.self).flatMap { tableform in
+                table.status = TableStatus.occupied
+                return table.save(on: req).map { _ in
+                    return Response(withSuccess: true, responseMessage: "Occupied Table", returnedData: table)
+                }
+            }
+        }
+    }
+    
     func delete(_ req: Request) throws -> Future<HTTPStatus>{
         return try req.parameters.next(Table.self).flatMap { temp in
             return temp.delete(on: req)

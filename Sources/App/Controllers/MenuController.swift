@@ -14,13 +14,22 @@ final class MenuController: RouteCollection{
     // RouteCollection protocol
     func boot(router: Router) throws {
         
-        let route = router.grouped(Constants.baseURL, "Menu")
+        let route = router.grouped(Constants.baseURL, "menu")
+        let itemRoute = router.grouped(Constants.baseURL, "menu/item")
+        
         let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
+        let tokenAuthGroupItem = itemRoute.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
         
         tokenAuthGroup.get("index", use: index)
         tokenAuthGroup.post(Menu.self ,use: create)
         tokenAuthGroup.get(Menu.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
+        
+        // Menu Items
+        tokenAuthGroupItem.get("index", use: indexItems)
+        tokenAuthGroupItem.post(Menu_Item.self ,use: createItem)
+        tokenAuthGroupItem.get(Menu_Item.parameter, use: getWithIDItem)
+        tokenAuthGroupItem.delete("delete", use: deleteItem)
     }
     
     // Controller Functions
@@ -41,4 +50,36 @@ final class MenuController: RouteCollection{
             return temp.delete(on: req)
             }.transform(to: .ok)
     }
+    
+    // Menu Items Controller Functions
+    func indexItems(_ req: Request) throws -> Future<[Menu_Item]>{
+        return Menu_Item.query(on: req).all()
+    }
+    
+    func createItem(_ req: Request, organisation: Menu_Item) throws -> Future<Menu_Item>{
+        return organisation.save(on: req)
+    }
+    
+    func getWithIDItem(_ req: Request) throws -> Future<Menu_Item>{
+        return try req.parameters.next(Menu_Item.self)
+    }
+    
+    func deleteItem(_ req: Request) throws -> Future<HTTPStatus>{
+        return try req.parameters.next(Menu_Item.self).flatMap { temp in
+            return temp.delete(on: req)
+            }.transform(to: .ok)
+    }
+    
+    // MARK: - Extras
+//    func addMenuItem(_ req: Request) throws -> Future<Menu> {
+//        guard let objectId = req.query[Int.self, at: "menuId"] else {
+//            throw Abort(.badRequest)
+//        }
+//        
+//        return Menu.find(objectId, on: req).map(to: Menu.self) { menu in
+//            guard let menu = menu else { throw Abort.init(HTTPStatus.notFound) }
+//            menu.addItem(item: req.parameters.next(Menu_Item.self))
+//            return menu.save(on: req)
+//        }
+//    }
 }

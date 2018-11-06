@@ -17,6 +17,7 @@ public func routes(_ router: Router) throws {
     let storeController = StoreController()
     let tableController = TableController()
     let cmsController = CMSController()
+    let restaurantController = RestaurantController()
     
     try router.register(collection: userController)
     try router.register(collection: organisationController)
@@ -26,4 +27,5 @@ public func routes(_ router: Router) throws {
     try router.register(collection: storeController)
     try router.register(collection: tableController)
     try router.register(collection: cmsController)
+    try router.register(collection: restaurantController)
 }

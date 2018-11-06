@@ -8,11 +8,23 @@
 import FluentPostgreSQL
 import Vapor
 
-final class Menu: PostgreSQLModel {
+final class Menu: PostgreSQLModel, Codable {
     var id: Int?
+    var restaurantID: Restaurant.ID // parent id
     
-    init(id: Int? = nil) {
+    init(id: Int? = nil, restaurantID: Restaurant.ID) {
         self.id = id
+        self.restaurantID = restaurantID
+    }
+}
+
+extension Menu {
+    var Restaurant: Parent<Menu, Restaurant> {
+        return parent(\.restaurantID)
+    }
+    
+    var menu_items: Children<Menu, Menu_Item> {
+        return children(\.menuID)
     }
 }
 

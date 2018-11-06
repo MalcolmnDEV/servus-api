@@ -8,13 +8,33 @@
 import FluentPostgreSQL
 import Vapor
 
-final class Menu_Item: PostgreSQLModel {
+enum Course: Int, Codable {
+    case starter
+    case main
+    case desert
+}
+
+final class Menu_Item: PostgreSQLModel, Codable {
     var id: Int?
+    var title: String
+    var course: Course
+    var menuID: Menu.ID // parent ID
     
-    init(id: Int? = nil) {
+    init(id: Int? = nil, title: String, course:Course, menuID: Menu.ID) {
         self.id = id
+        self.title = title
+        self.course = course
+        self.menuID = menuID
     }
 }
+
+extension Menu_Item {
+    var menu: Parent<Menu_Item, Menu> {
+        return parent(\.menuID)
+    }
+}
+
+
 
 /// Allows `Todo` to be used as a dynamic migration.
 extension Menu_Item: Migration {}

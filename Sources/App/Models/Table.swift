@@ -8,13 +8,22 @@
 import FluentPostgreSQL
 import Vapor
 
-final class Table: PostgreSQLModel {
+enum TableStatus: Int,Codable {
+    case empty = 0
+    case occupied
+    case waitingForOrder
+    case waitingForBill
+}
+
+final class Table: PostgreSQLModel, Codable {
     var id: Int?
     var tableNumber: Int
+    var status: TableStatus
     
     init(id: Int? = nil, tableNumber: Int) {
         self.id = id
         self.tableNumber = tableNumber
+        self.status = .empty
     }
 }
 

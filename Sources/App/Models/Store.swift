@@ -8,11 +8,13 @@
 import FluentPostgreSQL
 import Vapor
 
-final class Store: PostgreSQLModel {
+final class Store: PostgreSQLModel, Codable {
     var id: Int?
+    var menu: Menu
     
-    init(id: Int? = nil) {
+    init(id: Int? = nil, menu: Menu) {
         self.id = id
+        self.menu = menu
     }
 }
 

@@ -26,7 +26,8 @@ final class UserController: RouteCollection {
         let route = router.grouped(Constants.baseURL, "user")
         
         let basicAuthGroup = route.grouped(User.basicAuthMiddleware(using: BCryptDigest()))
-        basicAuthGroup.post("login", use: loginUser)
+        basicAuthGroup.post("/login", use: loginUser)
+//        route.post("/login", use: loginUser)
         
         let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
         tokenAuthGroup.post("index", use: index)
