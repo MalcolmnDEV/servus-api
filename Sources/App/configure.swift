@@ -68,7 +68,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     }
     
     let username = Environment.get("DATABASE_USER") ?? "malcolmnroberts"
-    let db = Environment.get("DATABASE_DB") ?? "servus_db"
+    let db = Environment.get("DATABASE_DB") ?? "servus_dev_db"
     let pw = Environment.get("DATABASE_PASSWORD") ?? nil
     
     let database = PostgreSQLDatabase(config: PostgreSQLDatabaseConfig(hostname: hostname,
