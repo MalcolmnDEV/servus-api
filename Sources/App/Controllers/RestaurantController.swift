@@ -20,6 +20,8 @@ final class RestaurantController: RouteCollection {
         tokenAuthGroup.post(Restaurant.self ,use: create)
         tokenAuthGroup.get(Restaurant.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
+        
+        tokenAuthGroup.get("qr_code", String.parameter, use: getRestaurantFromQR)
     }
     
     // Controller Functions
@@ -43,5 +45,9 @@ final class RestaurantController: RouteCollection {
         return try req.parameters.next(Restaurant.self).flatMap { temp in
             return temp.delete(on: req)
             }.transform(to: .ok)
+    }
+    
+    func getRestaurantFromQR(_ req: Request) throws -> Future<Restaurant> {
+        return try Restaurant.query(on: req).filter(\.qr_code_hex == req.parameters.next(String.self)).first().unwrap(or: Abort.init(.notFound))
     }
 }
