@@ -42,4 +42,10 @@ final class OrderController: RouteCollection{
             }.transform(to: .ok)
     }
     
+    func updateOrder(_ req: Request) throws -> Future<HTTPStatus> {
+        return try req.parameters.next(Order.self).flatMap { temp in
+            return temp.update(on: req)
+            }.transform(to: .ok)
+    }
+    
 }

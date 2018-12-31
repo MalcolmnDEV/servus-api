@@ -68,7 +68,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     }
     
     let username = Environment.get("DATABASE_USER") ?? "malcolmnroberts"
-    let db = Environment.get("DATABASE_DB") ?? "servus_dev"
+    let db = Environment.get("DATABASE_DB") ?? "servus_db"
     let pw = Environment.get("DATABASE_PASSWORD") ?? nil
     
     let database = PostgreSQLDatabase(config: PostgreSQLDatabaseConfig(hostname: hostname,
@@ -105,8 +105,9 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     
     //Migrations
-    migrations.add(migration: migrateOrganisationModel.self, database: .psql)
-    migrations.add(migration: migrateTableModel.self, database: .psql)
+//    migrations.add(migration: migrateOrganisationModel.self, database: .psql)
+//    migrations.add(migration: migrateTableModel.self, database: .psql)
+//    migrations.add(migration: migrateUserModel.self, database: .psql)
     
     services.register(migrations)
     

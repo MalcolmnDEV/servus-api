@@ -8,11 +8,24 @@
 import FluentPostgreSQL
 import Vapor
 
+enum OrderStatus: Int, Codable {
+    case created
+    case pending
+    case done
+}
+
 final class Order: PostgreSQLModel, Codable {
     var id: Int?
+    var user_id: User.ID
+    var fluentCreatedAt: Date?
+    var fluentUpdatedAt: Date?
+    var fluentDeletedAt: Date?
+    var order_status: OrderStatus
     
-    init(id: Int? = nil) {
+    init(id: Int? = nil, userID: User.ID) {
         self.id = id
+        self.user_id = userID
+        self.order_status = OrderStatus(rawValue: 0)!
     }
 }
 

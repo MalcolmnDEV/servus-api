@@ -6,15 +6,34 @@
 //
 
 import Foundation
+import Vapor
+import Codability
 
-struct Response{
-    private var success:Bool
-    private var message:String
-    private var data:Any
+struct Response: Codable {
+    var success: Bool
+    var message: String
+    var data: AnyCodable
     
-    init(withSuccess: Bool, responseMessage: String, returnedData: Any) {
+    init(withSuccess: Bool, responseMessage: String, returnedData: AnyCodable) {
         self.success = withSuccess
         self.message = responseMessage
         self.data = returnedData
     }
 }
+
+extension Response: Content { } 
+
+struct RestaurantResponse: Codable {
+    var success: Bool
+    var message: String
+    var restaurants: [Restaurant]
+    var menu: [Menu]?
+    
+    init(withSuccess: Bool, responseMessage: String, returnedData: [Restaurant]) {
+        self.success = withSuccess
+        self.message = responseMessage
+        self.restaurants = returnedData
+    }
+}
+
+extension RestaurantResponse: Content { } 

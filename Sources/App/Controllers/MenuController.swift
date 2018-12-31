@@ -24,6 +24,7 @@ final class MenuController: RouteCollection{
         tokenAuthGroup.post(Menu.self ,use: create)
         tokenAuthGroup.get(Menu.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
+        tokenAuthGroup.get("full", Int.parameter, use: getMenuItems)
         
         // Menu Items
         tokenAuthGroupItem.get("index", use: indexItems)
@@ -49,6 +50,13 @@ final class MenuController: RouteCollection{
         return try req.parameters.next(Menu.self).flatMap { temp in
             return temp.delete(on: req)
             }.transform(to: .ok)
+    }
+    
+    func getMenuItems(_ req: Request) throws -> Future<[Menu_Item]>{
+        return try Menu.find(req.parameters.next(), on: req).flatMap(to: [Menu_Item].self)  { menu in
+            guard let unwrappedMenu = menu else { throw Abort.init(HTTPStatus.notFound) }
+            return try unwrappedMenu.menu_items.query(on: req).all()
+        }
     }
     
     // Menu Items Controller Functions

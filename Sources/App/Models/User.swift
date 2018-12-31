@@ -44,6 +44,21 @@ final class User: Codable {
     }
 }
 
+struct migrateUserModel: PostgreSQLMigration {
+    
+    static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
+        return Database.update(User.self, on: connection) { builder in
+            builder.field(for: \.name)
+        }
+    }
+    
+    static func revert(on conn: PostgreSQLConnection) -> EventLoopFuture<Void> {
+        return Database.update(User.self, on: conn) { builder in
+            builder.deleteField(for: \.name)
+        }
+    }
+}
+
 extension User: PostgreSQLUUIDModel {}
 extension User: Content {}
 extension User: Migration {

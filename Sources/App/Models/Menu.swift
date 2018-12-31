@@ -8,6 +8,17 @@
 import FluentPostgreSQL
 import Vapor
 
+//struct FullMenu {
+//    var menu: Menu
+//    var menu_items: [Menu_Item]
+//    
+//    init(nMenu: Menu, _ req: Request) {
+//        self.menu = nMenu
+//        
+//        self.menu_items = try nMenu.menu_items.query(on: req).all().wait()
+//    }
+//}
+
 final class Menu: PostgreSQLModel, Codable {
     var id: Int?
     var restaurantID: Restaurant.ID // parent id

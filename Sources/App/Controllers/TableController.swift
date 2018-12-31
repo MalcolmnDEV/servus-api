@@ -40,7 +40,7 @@ final class TableController: RouteCollection{
             return try req.content.decode(Table.self).flatMap { tableform in
                 table.status = TableStatus.occupied
                 return table.save(on: req).map { _ in
-                    return Response(withSuccess: true, responseMessage: "Occupied Table", returnedData: table)
+                    return Response(withSuccess: true, responseMessage: "Occupied Table", returnedData: ["data": "coming soon"])
                 }
             }
         }

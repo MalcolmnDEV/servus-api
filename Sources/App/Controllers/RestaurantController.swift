@@ -23,8 +23,12 @@ final class RestaurantController: RouteCollection {
     }
     
     // Controller Functions
-    func index(_ req: Request) throws -> Future<[Restaurant]>{
-        return Restaurant.query(on: req).all()
+    func index(_ req: Request) throws -> Future<RestaurantResponse>{
+        let restaurants = Restaurant.query(on: req).all()
+        
+        return restaurants.flatMap { allRestaurants in
+            return Future.map(on: req) { return RestaurantResponse(withSuccess: true, responseMessage: "All restaurants returned", returnedData: allRestaurants) }
+        }
     }
     
     func create(_ req: Request, organisation: Restaurant) throws -> Future<Restaurant>{

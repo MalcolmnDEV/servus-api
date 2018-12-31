@@ -24,6 +24,7 @@ final class Restaurant: PostgreSQLModel, Codable {
     var address: String
     var contactInfo: ContactInfo
     var organisationId: Organisation.ID
+    var menu_id: Menu.ID?
         
     init(id: Int? = nil, organisationId: Organisation.ID, name: String, address: String, number: String, email: String) {
         self.id = id
@@ -39,7 +40,7 @@ extension Restaurant {
         return parent(\.organisationId)
     }
     
-    var menus: Children<Restaurant, Menu> {
+    var menu: Children<Restaurant, Menu> {
         return children(\.restaurantID)
     }
 }

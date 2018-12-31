@@ -43,21 +43,6 @@ struct migrateOrganisationModel: PostgreSQLMigration {
 
 /// Allows `Todo` to be used as a dynamic migration.
 extension Organisation: Migration {
-    static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
-
-        return Database.update(Organisation.self, on: connection, closure: { builder in
-            builder.field(for: \.name)
-            builder.field(for: \.address)
-        })
-
-
-//        return Database.create(Organisation.self, on: connection) { builder in
-//            builder.field(for: \.id, isIdentifier: true)
-//            builder.field(for: \.name, type: .string)
-////            builder.field(for: \.name , to: \Organisation.name)
-////            builder.field(for: \.address, to: \Organisation.address)
-//        }
-    }
 }
 
 /// Allows `Todo` to be encoded to and decoded from HTTP messages.

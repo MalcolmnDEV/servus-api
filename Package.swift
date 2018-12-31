@@ -13,10 +13,11 @@ let package = Package(
         // 👤 Authentication and Authorization layer for Fluent.
         .package(url: "https://github.com/vapor/auth.git", from: "2.0.0"),
         .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0-rc"),
-        .package(url: "https://github.com/vapor/fluent-postgresql.git", from: "1.0.0-rc")
+        .package(url: "https://github.com/vapor/fluent-postgresql.git", from: "1.0.0-rc"),
+        .package(url: "https://github.com/yonaskolb/Codability.git", from: "0.2.0-rc")
     ],
     targets: [
-        .target(name: "App", dependencies: ["Authentication","Leaf" ,"Vapor", "FluentPostgreSQL"],
+        .target(name: "App", dependencies: ["Authentication","Leaf" ,"Vapor", "FluentPostgreSQL", "Codability"],
                 exclude: [
                     "Config",
                     "Public",

@@ -32,6 +32,7 @@ final class UserController: RouteCollection {
         let tokenAuthGroup = route.grouped(User.tokenAuthMiddleware(), User.guardAuthMiddleware())
         tokenAuthGroup.post("index", use: index)
         tokenAuthGroup.delete("delete", use: delete)
+        tokenAuthGroup.get(UUID.parameter, use: getWithID)
     }
     
     func index(_ req: Request) throws -> Future<[User]> {
@@ -71,6 +72,11 @@ final class UserController: RouteCollection {
         return try req.parameters.next(User.self).flatMap { user in
             return user.delete(on: req)
             }.transform(to: .ok)
+    }
+    
+    func getWithID(_ req: Request) throws -> Future<User.Public> {
+        let user = try req.requireAuthenticated(User.self)
+        return Future.map(on: req) { return user.convertToPublic() }
     }
 }
 
