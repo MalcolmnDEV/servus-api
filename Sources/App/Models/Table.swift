@@ -19,11 +19,13 @@ final class Table: PostgreSQLModel, Codable {
     var id: Int?
     var tableNumber: Int
     var status: TableStatus
+    var restaurant_id: Restaurant.ID
     
-    init(id: Int? = nil, tableNumber: Int) {
+    init(id: Int? = nil, tableNumber: Int, restaurantID: Restaurant.ID) {
         self.id = id
         self.tableNumber = tableNumber
         self.status = .empty
+        self.restaurant_id = restaurantID
     }
 }
 

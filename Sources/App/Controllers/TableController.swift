@@ -20,6 +20,9 @@ final class TableController: RouteCollection{
         tokenAuthGroup.post(Table.self ,use: create)
         tokenAuthGroup.get(Table.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
+        
+        tokenAuthGroup.get("restaurant_id", Int.parameter ,use: getWithRestaurantID)
+        tokenAuthGroup.put("occupy" ,use: occupyTable)
     }
     
     // Controller Functions
@@ -35,13 +38,15 @@ final class TableController: RouteCollection{
         return try req.parameters.next(Table.self)
     }
     
-    func occupyTable(_ req: Request) throws -> Future<Response> {
+    func getWithRestaurantID(_ req: Request) throws -> Future<Table>{
+        return try Table.query(on: req).filter(\.restaurant_id == req.parameters.next(Int.self)).first().unwrap(or: Abort.init(.notFound))
+    }
+    
+    func occupyTable(_ req: Request) throws -> Future<Table> {
         return try req.parameters.next(Table.self).flatMap { table in
             return try req.content.decode(Table.self).flatMap { tableform in
                 table.status = TableStatus.occupied
-                return table.save(on: req).map { _ in
-                    return Response(withSuccess: true, responseMessage: "Occupied Table", returnedData: ["data": "coming soon"])
-                }
+                return table.save(on: req)
             }
         }
     }
