@@ -31,6 +31,8 @@ final class MenuController: RouteCollection{
         tokenAuthGroupItem.post(Menu_Item.self ,use: createItem)
         tokenAuthGroupItem.get(Menu_Item.parameter, use: getWithIDItem)
         tokenAuthGroupItem.delete("delete", use: deleteItem)
+        
+        itemRoute.get("/upload", use: getUploadView)
     }
     
     // Controller Functions
@@ -60,6 +62,11 @@ final class MenuController: RouteCollection{
     }
     
     // Menu Items Controller Functions
+    
+    func getUploadView(_ req: Request) throws -> Future<View>{
+        return try req.view().render("upload")
+    }
+    
     func indexItems(_ req: Request) throws -> Future<[Menu_Item]>{
         return Menu_Item.query(on: req).all()
     }
@@ -91,3 +98,4 @@ final class MenuController: RouteCollection{
 //        }
 //    }
 }
+
