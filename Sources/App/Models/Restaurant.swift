@@ -7,7 +7,7 @@
 
 import FluentPostgreSQL
 import Vapor
-import CommonCrypto
+import Crypto
 
 struct ContactInfo: Codable {
     var number: String
@@ -34,22 +34,11 @@ final class Restaurant: PostgreSQLModel, Codable {
         self.name = name
         self.address = address
         self.contactInfo = ContactInfo(number: number, email: email)
-        
-        self.qr_code_hex = self.MD5("\(self.id!)+\(self.address)")
-    }
-    
-    func MD5(_ string: String) -> String? {
-        let length = Int(CC_MD5_DIGEST_LENGTH)
-        var digest = [UInt8](repeating: 0, count: length)
-        
-        if let d = string.data(using: String.Encoding.utf8) {
-            _ = d.withUnsafeBytes { (body: UnsafePointer<UInt8>) in
-                CC_MD5(body, CC_LONG(d.count), &digest)
-            }
-        }
-        
-        return (0..<length).reduce("") {
-            $0 + String(format: "%02x", digest[$1])
+          
+        do {
+            self.qr_code_hex = try BCrypt.hash("\(self.id!)+\(self.address)")
+        } catch {
+            print(error)
         }
     }
 }
