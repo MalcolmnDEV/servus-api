@@ -19,6 +19,8 @@ import Vapor
 //    }
 //}
 
+
+
 final class Menu: PostgreSQLModel, Codable {
     var id: Int?
     var restaurantID: Restaurant.ID // parent id
@@ -26,6 +28,18 @@ final class Menu: PostgreSQLModel, Codable {
     init(id: Int? = nil, restaurantID: Restaurant.ID) {
         self.id = id
         self.restaurantID = restaurantID
+    }
+    
+    final class Full: Content {
+        var id: Int?
+        var restaurantID: Restaurant.ID // parent id
+        var menuItems: [Menu_Item]
+        
+        init(id: Int? = nil, restaurantID: Restaurant.ID, items: [Menu_Item]) {
+            self.id = id
+            self.restaurantID = restaurantID
+            self.menuItems = items
+        }
     }
 }
 
