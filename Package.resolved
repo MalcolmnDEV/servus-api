@@ -11,6 +11,33 @@
         }
       },
       {
+        "package": "Cryptor",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueCryptor.git",
+        "state": {
+          "branch": null,
+          "revision": "25186dc1a53f3eb6d900853f659dff8b9af523aa",
+          "version": "1.0.23"
+        }
+      },
+      {
+        "package": "Socket",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
+        "state": {
+          "branch": null,
+          "revision": "9c1b578c618f0bfac017aaaaead19de57bb37831",
+          "version": "1.0.43"
+        }
+      },
+      {
+        "package": "SSLService",
+        "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
+        "state": {
+          "branch": null,
+          "revision": "631133404387077c5ac80a40e338d09e0f58aaff",
+          "version": "1.0.43"
+        }
+      },
+      {
         "package": "Codability",
         "repositoryURL": "https://github.com/yonaskolb/Codability.git",
         "state": {
@@ -92,6 +119,24 @@
         }
       },
       {
+        "package": "LoggerAPI",
+        "repositoryURL": "https://github.com/IBM-Swift/LoggerAPI.git",
+        "state": {
+          "branch": null,
+          "revision": "d0ccb4158b83f8692531892a9c894bb757593c6f",
+          "version": "1.8.0"
+        }
+      },
+      {
+        "package": "MailCore",
+        "repositoryURL": "https://github.com/LiveUI/MailCore.git",
+        "state": {
+          "branch": "master",
+          "revision": "d9542f264dc16dafc8a29138a375da444e652645",
+          "version": null
+        }
+      },
+      {
         "package": "Multipart",
         "repositoryURL": "https://github.com/vapor/multipart.git",
         "state": {
@@ -116,6 +161,15 @@
           "branch": null,
           "revision": "3219e328491b0853b8554c5a694add344d2c6cfb",
           "version": "3.0.1"
+        }
+      },
+      {
+        "package": "SendGrid",
+        "repositoryURL": "https://github.com/vapor-community/sendgrid-provider.git",
+        "state": {
+          "branch": null,
+          "revision": "3b71cae7ed953a128a7bb0381b80b31bc7f1d8e5",
+          "version": "3.0.5"
         }
       },
       {
@@ -173,6 +227,15 @@
         }
       },
       {
+        "package": "SwiftSMTP",
+        "repositoryURL": "https://github.com/IBM-Swift/Swift-SMTP.git",
+        "state": {
+          "branch": null,
+          "revision": "496f779a073991609cf3745214e49449d9b5db24",
+          "version": "5.1.0"
+        }
+      },
+      {
         "package": "TemplateKit",
         "repositoryURL": "https://github.com/vapor/template-kit.git",
         "state": {
@@ -206,6 +269,24 @@
           "branch": null,
           "revision": "157d3b15336caa882662cc75024dd04b2e225246",
           "version": "3.1.0"
+        }
+      },
+      {
+        "package": "Mailgun",
+        "repositoryURL": "https://github.com/twof/VaporMailgunService.git",
+        "state": {
+          "branch": null,
+          "revision": "353706a5c73f4aa79494a9bc681113bd5400017f",
+          "version": "1.5.0"
+        }
+      },
+      {
+        "package": "VaporTestTools",
+        "repositoryURL": "https://github.com/LiveUI/VaporTestTools.git",
+        "state": {
+          "branch": null,
+          "revision": "135d02e2e2a632c134567754d65ce2afe262bab3",
+          "version": "0.1.7"
         }
       },
       {

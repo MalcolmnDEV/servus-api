@@ -12,9 +12,9 @@ struct LoginUser: Content {
     var id: UUID?
     var name: String
     var username: String
-    var token: Token
+    var token: String
     
-    init(id: UUID?, name: String, username: String, token: Token) {
+    init(id: UUID?, name: String, username: String, token: String) {
         self.id = id
         self.name = name
         self.username = username
@@ -64,11 +64,14 @@ final class UserController: RouteCollection {
         return try req.view().render("register")
     }
     
-    func createUser(_ req: Request) throws -> Future<User.Public> {
-        return try req.content.decode(User.self).flatMap(to: User.Public.self) { user in
+    func createUser(_ req: Request) throws -> Future<LoginUser> {
+        return try req.content.decode(User.self).flatMap(to: LoginUser.self) { user in
             let passwordHash = try req.make(BCryptDigest.self).hash(user.password)
             user.password = passwordHash
-            return user.save(on: req).convertToPublic()
+            return user.save(on: req).flatMap(to: LoginUser.self) { user in
+                let token = try Token.generate(for: user)
+                return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token.token) }
+            }
         }
     }
     
@@ -80,7 +83,7 @@ final class UserController: RouteCollection {
         let user = try req.requireAuthenticated(User.self)
         let token = try Token.generate(for: user)
         return token.save(on: req).flatMap(to: LoginUser.self) { token in 
-            return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token) }
+            return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token.token) }
         }
     }
     
