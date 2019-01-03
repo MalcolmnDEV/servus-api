@@ -32,16 +32,6 @@ final class User: Codable {
             self.username = username
         }
     }
-    
-    struct LoginUser: Content {
-        var username: String
-        var password: String
-        
-        init(username: String, password: String) {
-            self.username = username
-            self.password = password
-        }
-    }
 }
 
 struct migrateUserModel: PostgreSQLMigration {

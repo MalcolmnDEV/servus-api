@@ -8,6 +8,20 @@
 import Vapor
 import Crypto
 
+struct LoginUser: Content {
+    var id: UUID?
+    var name: String
+    var username: String
+    var token: Token
+    
+    init(id: UUID?, name: String, username: String, token: Token) {
+        self.id = id
+        self.name = name
+        self.username = username
+        self.token = token
+    }
+}
+
 final class UserController: RouteCollection {
     func boot(router: Router) throws {
         
@@ -62,10 +76,12 @@ final class UserController: RouteCollection {
         return try req.view().render("login")
     }
     
-    func loginUser(_ req: Request) throws -> Future<Token> {
+    func loginUser(_ req: Request) throws -> Future<LoginUser> {
         let user = try req.requireAuthenticated(User.self)
         let token = try Token.generate(for: user)
-        return token.save(on: req)
+        return token.save(on: req).flatMap(to: LoginUser.self) { token in 
+            return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token) }
+        }
     }
     
     func delete(_ req: Request) throws -> Future<HTTPStatus> {
