@@ -33,8 +33,18 @@ final class RestaurantController: RouteCollection {
         }
     }
     
-    func create(_ req: Request, organisation: Restaurant) throws -> Future<Restaurant>{
-        return organisation.save(on: req)
+    func create(_ req: Request, obj: Restaurant) throws -> Future<Restaurant>{
+        
+        // every restaurant must have a menu so when a new restaurant is created -> create an empty menu and then from there add items to the menu
+        let menuObj = Menu(restaurantID: obj.id!)
+        
+        obj.menu_id = menuObj.id!
+        
+        menuObj.save(on: req).always {
+            // async when the save is completed
+        }
+        
+        return obj.save(on: req)
     }
     
     func getWithID(_ req: Request) throws -> Future<Restaurant>{

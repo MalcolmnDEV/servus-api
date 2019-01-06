@@ -97,6 +97,11 @@ final class UserController: RouteCollection {
         let user = try req.requireAuthenticated(User.self)
         return Future.map(on: req) { return user.convertToPublic() }
     }
+    
+    func resetPassword(_ req: Request) throws -> Future<HTTPStatus> {
+        let emailAddress = try req.parameters.next(String.self)
+        return MailManager.shared.sendEmailTo(emailAddress: emailAddress, usingEmail: .Support, usingRequest: req)
+    }
 }
 
 /// Data required to create a user.

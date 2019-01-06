@@ -40,8 +40,8 @@ final class MenuController: RouteCollection{
         return Menu.query(on: req).all()
     }
     
-    func create(_ req: Request, organisation: Menu) throws -> Future<Menu>{
-        return organisation.save(on: req)
+    func create(_ req: Request, obj: Menu) throws -> Future<Menu>{
+        return obj.save(on: req)
     }
     
     func getWithID(_ req: Request) throws -> Future<Menu>{

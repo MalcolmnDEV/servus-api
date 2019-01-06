@@ -2,6 +2,7 @@ import Vapor
 import Leaf
 import Authentication
 import FluentPostgreSQL
+import MailCore
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
@@ -110,5 +111,14 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 //    migrations.add(migration: migrateUserModel.self, database: .psql)
     
     services.register(migrations)
+    
+    
+    // Mail Core
+    
+    let mailApi = Environment.get("MailCore_API") ?? "7cfbf54808c1fcdc1df85e493ee8eaae-49a2671e-6bcf6a28"
+    let mailDomain = Environment.get("MailCore_Domain") ?? "sandboxf47ddf5df5a84e80bb4de8c2e7255c15.mailgun.org"
+    
+    let mailConfig = Mailer.Config.mailgun(key: mailApi, domain: mailDomain)
+    try Mailer.init(config: mailConfig, registerOn: &services)
     
 }
