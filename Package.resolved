@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSocket.git",
         "state": {
           "branch": null,
-          "revision": "9c1b578c618f0bfac017aaaaead19de57bb37831",
-          "version": "1.0.43"
+          "revision": "a40b405bdf32bc853307dd5dee8d00636e394013",
+          "version": "1.0.44"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/IBM-Swift/BlueSSLService.git",
         "state": {
           "branch": null,
-          "revision": "631133404387077c5ac80a40e338d09e0f58aaff",
-          "version": "1.0.43"
+          "revision": "6910763b0dfa6f95a75217215d8cdce3ee11a6ae",
+          "version": "1.0.44"
         }
       },
       {
@@ -92,6 +92,15 @@
         }
       },
       {
+        "package": "FluentMySQL",
+        "repositoryURL": "https://github.com/vapor/fluent-mysql.git",
+        "state": {
+          "branch": null,
+          "revision": "2e2f6ea6a97d0b352cf55e6ec289dc1276a6b31a",
+          "version": "3.0.1"
+        }
+      },
+      {
         "package": "FluentPostgreSQL",
         "repositoryURL": "https://github.com/vapor/fluent-postgresql.git",
         "state": {
@@ -107,6 +116,24 @@
           "branch": null,
           "revision": "6973bf50dab8dd00e4daf8cb82ca72b33f5db016",
           "version": "3.1.6"
+        }
+      },
+      {
+        "package": "JWT",
+        "repositoryURL": "https://github.com/vapor/jwt.git",
+        "state": {
+          "branch": null,
+          "revision": "2e225c722bf26407c1c4bd11d341e48759f46095",
+          "version": "3.0.0"
+        }
+      },
+      {
+        "package": "JWTKeychain",
+        "repositoryURL": "https://github.com/nodes-vapor/jwt-keychain.git",
+        "state": {
+          "branch": null,
+          "revision": "b627f59553bf23fa1e2a3b9ae81357236010a16f",
+          "version": "1.0.0-beta.2"
         }
       },
       {
@@ -146,12 +173,39 @@
         }
       },
       {
+        "package": "MySQL",
+        "repositoryURL": "https://github.com/vapor/mysql.git",
+        "state": {
+          "branch": null,
+          "revision": "ac94ebc248b898469be7b97d04a7e712cd22619b",
+          "version": "3.1.2"
+        }
+      },
+      {
         "package": "PostgreSQL",
         "repositoryURL": "https://github.com/vapor/postgresql.git",
         "state": {
           "branch": null,
           "revision": "975cc8b3471966a7986e1ffac4db4bac26d6db86",
           "version": "1.1.2"
+        }
+      },
+      {
+        "package": "Redis",
+        "repositoryURL": "https://github.com/vapor/redis.git",
+        "state": {
+          "branch": null,
+          "revision": "2fb20632db3ad86e2b3596cd34605f694a92c177",
+          "version": "3.0.2"
+        }
+      },
+      {
+        "package": "Reset",
+        "repositoryURL": "https://github.com/nodes-vapor/reset.git",
+        "state": {
+          "branch": null,
+          "revision": "84f9b3e69f17a345ccb953a5834bbd21be58b15e",
+          "version": "1.0.0-rc.3"
         }
       },
       {
@@ -186,8 +240,26 @@
         "repositoryURL": "https://github.com/vapor/sql.git",
         "state": {
           "branch": null,
-          "revision": "839cf96eba296d26151ff1d7a746e9fe35053584",
-          "version": "2.2.0"
+          "revision": "f77bcae7c95150cdab62095e7bf321ed8c7551bd",
+          "version": "2.3.0"
+        }
+      },
+      {
+        "package": "Submissions",
+        "repositoryURL": "https://github.com/nodes-vapor/submissions.git",
+        "state": {
+          "branch": null,
+          "revision": "726bab1aadb7f6048702401920ed992fa9d20b77",
+          "version": "1.0.0-beta.10"
+        }
+      },
+      {
+        "package": "Sugar",
+        "repositoryURL": "https://github.com/nodes-vapor/sugar.git",
+        "state": {
+          "branch": null,
+          "revision": "4071e699febf84b5254766d7ffd57db0483ce873",
+          "version": "3.0.0"
         }
       },
       {
@@ -267,8 +339,8 @@
         "repositoryURL": "https://github.com/vapor/vapor.git",
         "state": {
           "branch": null,
-          "revision": "157d3b15336caa882662cc75024dd04b2e225246",
-          "version": "3.1.0"
+          "revision": "54cbf396147aba77ecb32e7fc75a3d13251551b1",
+          "version": "3.1.1"
         }
       },
       {

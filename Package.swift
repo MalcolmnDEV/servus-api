@@ -15,10 +15,21 @@ let package = Package(
         .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0-rc"),
         .package(url: "https://github.com/vapor/fluent-postgresql.git", from: "1.0.0-rc"),
         .package(url: "https://github.com/yonaskolb/Codability.git", from: "0.2.0-rc"),
-        .package(url: "https://github.com/LiveUI/MailCore.git", .branch("master"))
+        .package(url: "https://github.com/LiveUI/MailCore.git", .branch("master")),
+        .package(url: "https://github.com/nodes-vapor/reset.git", from: "1.0.0-rc"),
+        .package(url: "https://github.com/nodes-vapor/sugar.git", from: "3.0.0"),
+        .package(url: "https://github.com/nodes-vapor/jwt-keychain.git", from: "1.0.0-beta"),
     ],
     targets: [
-        .target(name: "App", dependencies: ["Authentication","Leaf" ,"Vapor", "FluentPostgreSQL", "Codability", "MailCore"],
+        .target(name: "App", dependencies: ["Authentication",
+                                            "Leaf" ,
+                                            "Vapor", 
+                                            "FluentPostgreSQL", 
+                                            "Codability", 
+                                            "MailCore", 
+                                            "Reset", 
+                                            "Sugar",
+                                            "JWTKeychain"],
                 exclude: [
                     "Config",
                     "Public",

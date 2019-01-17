@@ -3,6 +3,8 @@ import Leaf
 import Authentication
 import FluentPostgreSQL
 import MailCore
+import Reset
+import Sugar
 
 /// Called before your application initializes.
 public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
@@ -12,9 +14,12 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try services.register(AuthenticationProvider())
     
     /// Register routes to the router
-    let router = EngineRouter.default()
-    try routes(router)
-    services.register(router, as: Router.self)
+    services.register(Router.self) { container -> EngineRouter in
+        let router = EngineRouter.default()
+        try router.useResetRoutes(User.self, on: container)
+        try routes(router)
+        return router
+    }
     
     let leafProvider = LeafProvider()
     try services.register(leafProvider)
@@ -26,41 +31,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
     
-//        if env == .production {
-//            let serverConfiure = NIOServerConfig.default(hostname: "0.0.0.0", port: 3000)
-//            services.register(serverConfiure)
-//        }
-    
-//    func configDBDev() -> PostgreSQLDatabaseConfig{
-//        return PostgreSQLDatabaseConfig(hostname: "localhost",
-//                                        port: 5432,
-//                                        username: "malcolmnroberts",
-//                                        database: "servus_dev",
-//                                        password: nil)
-//    }
-//
-//    func configDBProduction() -> PostgreSQLDatabaseConfig{
-//
-//        let hostname = Environment.get("DATABASE_HOSTNAME") ?? "horton.elephantsql.com"
-//        let port: Int
-//        if let testPort = Environment.get("DATABASE_PORT") {
-//            port = Int(testPort) ?? 5432
-//        } else {
-//            port = 5432
-//        }
-//
-//        let username = Environment.get("DATABASE_USER") ?? "vwtdhmll"
-//        let db = Environment.get("DATABASE_DB") ?? "vwtdhmll"
-//        let pw = Environment.get("DATABASE_PASSWORD") ?? "uEtMFj_lHHuwILxa9Hie-ExriohcKlUb"
-//
-//        return PostgreSQLDatabaseConfig(hostname: hostname,
-//                                        port: port,
-//                                        username: username,
-//                                        database: db,
-//                                        password: pw)
-//    }
-    
-    let hostname = Environment.get("DATABASE_HOSTNAME") ?? "localhost"
+    let hostname = Environment.get(EnvironmentKey.PSQL.hostname) ?? "localhost"
     let port: Int
     if let testPort = Environment.get("DATABASE_PORT") {
         port = Int(testPort) ?? 5432
@@ -69,8 +40,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     }
     
     let username = Environment.get("DATABASE_USER") ?? "malcolmnroberts"
-    let db = Environment.get("DATABASE_DB") ?? "servus_dev_db"
-    let pw = Environment.get("DATABASE_PASSWORD") ?? nil
+    let db = Environment.get(EnvironmentKey.PSQL.database) ?? "servus_dev_db"
+    let pw = Environment.get(EnvironmentKey.PSQL.password) ?? nil
     
     let database = PostgreSQLDatabase(config: PostgreSQLDatabaseConfig(hostname: hostname,
                                                                        port: port,
@@ -80,9 +51,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     
     // Configure a PostgreSQL database
-    
-//    let database = PostgreSQLDatabase(config: env == .production ? configDBProduction() : configDBDev())
-    
+        
     /// Register the configured SQLite database to the database config.
     var databases = DatabasesConfig()
     databases.add(database: database, as: .psql)
@@ -115,10 +84,87 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     // Mail Core
     
-    let mailApi = Environment.get("MailCore_API") ?? "7cfbf54808c1fcdc1df85e493ee8eaae-49a2671e-6bcf6a28"
-    let mailDomain = Environment.get("MailCore_Domain") ?? "sandboxf47ddf5df5a84e80bb4de8c2e7255c15.mailgun.org"
+    let mailApi = Environment.get(EnvironmentKey.Mailgun.apiKey) ?? "7cfbf54808c1fcdc1df85e493ee8eaae-49a2671e-6bcf6a28"
+    let mailDomain = Environment.get(EnvironmentKey.Mailgun.domain) ?? "sandboxf47ddf5df5a84e80bb4de8c2e7255c15.mailgun.org"
     
     let mailConfig = Mailer.Config.mailgun(key: mailApi, domain: mailDomain)
     try Mailer.init(config: mailConfig, registerOn: &services)
+        
+    // Reset Password
     
+    try services.register(ResetProvider<User>(config: .current))
+    
+    services.register { _ -> LeafTagConfig in
+        var tags = LeafTagConfig.default()
+        tags.useResetLeafTags()
+        return tags
+    }
+}
+
+extension AppConfig {
+    static var current: AppConfig {
+        return AppConfig(
+            name: env(EnvironmentKey.Project.name, "Servus Api"),
+            url: env(EnvironmentKey.Project.url, "http://localhost:8080"),
+            resetPasswordEmail: .init(
+                fromEmail: "no-reply@like.st",
+                subject: "Reset Password"
+            ),
+            setPasswordEmail: .init(
+                fromEmail: "no-reply@like.st",
+                subject: "Set Password"
+            ),
+            newUserRequestEmail: .init(
+                fromEmail: "no-reply@like.st",
+                toEmail: "test+user@nodes.dk",
+                subject: "New User Request"
+            ),
+            newAppUserSetPasswordSigner: ExpireableJWTSigner(
+                expirationPeriod: 30.daysInSecs,
+                signer: .hs256(
+                    key: env(
+                        EnvironmentKey.Reset.setPasswordSignerKey, "secret-reset"
+                        ).convertToData()
+                )
+            )
+        )
+    }
+}
+
+extension ResetConfig where U == User {
+    static var current: ResetConfig<User> {
+        return ResetConfig(
+            name: AppConfig.current.name,
+            baseURL: AppConfig.current.url,
+            endpoints: .apiPrefixed,
+            signer: .hs256(key: env(EnvironmentKey.Reset.signerKey, "secret-reset-appuser")
+                .convertToData()),
+            responses: .current
+        )
+    }
+}
+
+extension ResetResponses {
+    public static var current: ResetResponses {
+        return .init(
+            resetPasswordRequestForm: { req in
+                try HTTPResponse(status: .notFound).encode(for: req)
+        },
+            resetPasswordUserNotified: { req in
+                try HTTPResponse(status: .noContent).encode(for: req)
+        },
+            resetPasswordForm: { req, user in
+                try req
+                    .make(LeafRenderer.self)
+                    .render(ViewPath.Reset.form)
+                    .encode(for: req)
+        },
+            resetPasswordSuccess: { req, user in
+                try req
+                    .make(LeafRenderer.self)
+                    .render(ViewPath.Reset.success)
+                    .encode(for: req)
+        }
+        )
+    }
 }

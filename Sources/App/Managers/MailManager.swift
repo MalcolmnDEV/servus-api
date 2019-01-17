@@ -24,6 +24,19 @@ class MailManager: NSObject {
         super.init()
     }
     
+    func sendResetEmail(mail: Mailer.Message, usingRequest: Request) -> Future<HTTPStatus> {
+        do {
+            try usingRequest.mail.send(mail).always {
+                
+            }
+        } catch {
+            //handle error
+            print(error)
+        }
+        
+        return Future.map(on: usingRequest) { return HTTPStatus.ok }
+    }
+    
     func sendEmailTo(emailAddress: String, usingEmail: EmailType, usingRequest: Request) -> Future<HTTPStatus> {
         // send email to address given
         
