@@ -18,6 +18,20 @@ final class Organisation: PostgreSQLModel, Codable {
         self.name = name
         self.address = address
     }
+    
+    final class Full: Content {
+        var id: Int?
+        var name: String
+        var address: String
+        var restaurants: [Restaurant]
+        
+        init(id: Int? = nil, name: String, address:String, items: [Restaurant]) {
+            self.id = id
+            self.name = name
+            self.address = address
+            self.restaurants = items
+        }
+    }
 }
 
 extension Organisation {

@@ -73,8 +73,8 @@ final class MenuController: RouteCollection{
         return Menu_Item.query(on: req).all()
     }
     
-    func createItem(_ req: Request, organisation: Menu_Item) throws -> Future<Menu_Item>{
-        return organisation.save(on: req)
+    func createItem(_ req: Request, item: Menu_Item) throws -> Future<Menu_Item>{
+        return item.save(on: req)
     }
     
     func getWithIDItem(_ req: Request) throws -> Future<Menu_Item>{

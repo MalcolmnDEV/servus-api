@@ -34,8 +34,6 @@ extension Menu_Item {
     }
 }
 
-
-
 /// Allows `Todo` to be used as a dynamic migration.
 extension Menu_Item: Migration {}
 

@@ -22,7 +22,7 @@ final class OrganisationController: RouteCollection{
         tokenAuthGroup.post(Organisation.self ,use: create)
         tokenAuthGroup.get(Organisation.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
-        tokenAuthGroup.get("restaurants", use: getRestaurants)
+        tokenAuthGroup.get(Organisation.parameter, "restaurants", use: getRestaurants)
     }
 
     //MARK:- Controller Default Functions
@@ -45,11 +45,23 @@ final class OrganisationController: RouteCollection{
     }
     
     // MARK: - Extra functions
-    func getRestaurants(_ req: Request) throws -> Future<[Restaurant]> {
-        guard let id = req.query[Int.self, at: "organisationId"] else { throw Abort(.badRequest) }
-        return Organisation.find(id, on: req).flatMap(to: [Restaurant].self) { organisation in // 1
-            guard let unwrapped = organisation else { throw Abort.init(HTTPStatus.notFound) } // 2
-            return try unwrapped.restaurants.query(on: req).all() // 3
+    func getRestaurants(_ req: Request) throws -> Future<Organisation.Full> {
+        
+        return try req.parameters.next(Organisation.self).flatMap(to: Organisation.Full.self) { temp in
+            return try temp.restaurants.query(on: req).all().map { items in
+                Organisation.Full(id: temp.id, name: temp.name, address: temp.address, items: items)
+            }
         }
+        
     }
+    
+//    func getMenuItems(_ req: Request) throws -> Future<Menu.Full>{
+//        
+//        return try req.parameters.next(Menu.self).flatMap(to: Menu.Full.self) { menu in
+//            return try menu.menu_items.query(on: req).all().map { items in
+//                Menu.Full(id: menu.id, restaurantID: menu.restaurantID, items: items)
+//            }
+//        }
+//    }
+    
 }

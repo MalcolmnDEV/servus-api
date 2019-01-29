@@ -37,3 +37,19 @@ struct RestaurantResponse: Codable {
 }
 
 extension RestaurantResponse: Content { } 
+
+struct RestaurantMenuResponse: Codable {
+    var success: Bool
+    var message: String
+    var restaurant: Restaurant?
+    var menu: Menu.Full?
+    
+    init(withSuccess: Bool, responseMessage: String, restaurant: Restaurant?, menu: Menu.Full?) {
+        self.success = withSuccess
+        self.message = responseMessage
+        self.restaurant = restaurant
+        self.menu = menu
+    }
+}
+
+extension RestaurantMenuResponse: Content { } 
