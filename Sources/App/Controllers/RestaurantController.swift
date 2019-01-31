@@ -25,7 +25,7 @@ final class RestaurantController: RouteCollection {
         
         tokenAuthGroup.get(Restaurant.parameter, "menu", use: getRestaurantAndMenu)
         
-        tokenAuthGroup.get("nearby/", Double.parameter, Double.parameter , use: getRestaurantAndMenu)
+        tokenAuthGroup.get("nearby/", Double.parameter, Double.parameter , use: getNearbyRestaurants)
     }
     
     // Controller Functions
