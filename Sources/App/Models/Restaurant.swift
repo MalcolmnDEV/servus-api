@@ -27,14 +27,20 @@ final class Restaurant: PostgreSQLModel, Codable {
     var organisationId: Organisation.ID
     var menu_id: Menu.ID?
     var qr_code_hex: String?
+    var image: String?
+    var logo: String?
+    var distance: String?
         
-    init(id: Int? = nil, organisationId: Organisation.ID, name: String, address: String, number: String, email: String) {
+    init(id: Int? = nil, organisationId: Organisation.ID, name: String, address: String, number: String, email: String, image: String, logo: String, distance: String) {
         self.id = id
         self.organisationId = organisationId
         self.name = name
         self.address = address
         self.contactInfo = ContactInfo(number: number, email: email)
-          
+        self.image = image
+        self.logo = logo
+        self.distance = distance
+        
         do {
             self.qr_code_hex = try BCrypt.hash("\(self.id!)+\(self.address)")
         } catch {
