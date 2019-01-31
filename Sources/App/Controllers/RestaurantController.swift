@@ -24,6 +24,8 @@ final class RestaurantController: RouteCollection {
         tokenAuthGroup.get("qr_code", String.parameter, use: getRestaurantFromQR)
         
         tokenAuthGroup.get(Restaurant.parameter, "menu", use: getRestaurantAndMenu)
+        
+        tokenAuthGroup.get("nearby/", Double.parameter, Double.parameter , use: getRestaurantAndMenu)
     }
     
     // Controller Functions
@@ -74,6 +76,14 @@ final class RestaurantController: RouteCollection {
                     
                     } ?? Future.map(on: req) { return RestaurantMenuResponse(withSuccess: false, responseMessage: "Could not find restaurant and its menu", restaurant: nil, menu: nil) }  
             }
+        }
+    }
+    
+    func getNearbyRestaurants(_ req: Request) throws -> Future<RestaurantResponse> {
+        let restaurants = Restaurant.query(on: req).all()
+        
+        return restaurants.flatMap { allRestaurants in
+            return Future.map(on: req) { return RestaurantResponse(withSuccess: true, responseMessage: "All nearby restaurants returned", returnedData: allRestaurants) }
         }
     }
 }
