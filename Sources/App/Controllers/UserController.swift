@@ -13,12 +13,14 @@ struct LoginUser: Content {
     var name: String
     var username: String
     var token: String
+    var cards : [Card]
     
-    init(id: UUID?, name: String, username: String, token: String) {
+    init(id: UUID?, name: String, username: String, token: String, cards: [Card]) {
         self.id = id
         self.name = name
         self.username = username
         self.token = token
+        self.cards = cards
     }
 }
 
@@ -70,7 +72,10 @@ final class UserController: RouteCollection {
             user.password = passwordHash
             return user.save(on: req).flatMap(to: LoginUser.self) { user in
                 let token = try Token.generate(for: user)
-                return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token.token) }
+                // get users cards
+                return try user.user_cards.query(on: req).all().flatMap { cards in
+                    return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token.token, cards: cards) }
+                }
             }
         }
     }
@@ -83,7 +88,11 @@ final class UserController: RouteCollection {
         let user = try req.requireAuthenticated(User.self)
         let token = try Token.generate(for: user)
         return token.save(on: req).flatMap(to: LoginUser.self) { token in 
-            return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token.token) }
+            
+            // get users cards
+            return try user.user_cards.query(on: req).all().flatMap { cards in
+                return Future.map(on: req) { return LoginUser(id: user.id, name: user.name, username: user.username, token: token.token, cards: cards) }
+            }
         }
     }
     

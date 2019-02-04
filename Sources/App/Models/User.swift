@@ -14,6 +14,7 @@ import MailCore
 import Sugar
 import JWTKeychain
 
+
 final class User: Codable, HasReadablePassword, HasReadableUsername {
     static var readablePasswordKey: KeyPath<User, String> = \.password
     
@@ -49,30 +50,18 @@ final class User: Codable, HasReadablePassword, HasReadableUsername {
     }
 }
 
-struct migrateUserModel: PostgreSQLMigration {
+extension User {
     
-    static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
-        return Database.update(User.self, on: connection) { builder in
-            builder.field(for: \.name)
-        }
-    }
-    
-    static func revert(on conn: PostgreSQLConnection) -> EventLoopFuture<Void> {
-        return Database.update(User.self, on: conn) { builder in
-            builder.deleteField(for: \.name)
-        }
+    var user_cards: Children<User, Card> {
+        return children(\.user_id)
     }
 }
 
 extension User: PostgreSQLUUIDModel {}
 extension User: Content {}
+
 extension User: Migration {
-    static func prepare(on connection: PostgreSQLConnection) -> Future<Void> {
-        return Database.create(self, on: connection) { builder in
-            try addProperties(to: builder)
-            builder.unique(on: \.username)
-        }
-    }
+    
 }
 
 extension User: Parameter {}

@@ -72,12 +72,11 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: Store.self, database: .psql)
     migrations.add(model: Organisation.self, database: .psql)
     migrations.add(model: Restaurant.self, database: .psql)
-    
+    migrations.add(model: Card.self, database: .psql)
     
     //Migrations
-//    migrations.add(migration: migrateOrganisationModel.self, database: .psql)
-//    migrations.add(migration: migrateTableModel.self, database: .psql)
-//    migrations.add(migration: migrateUserModel.self, database: .psql)
+//    migrations.add(migration: migrateMenuItemModel.self, database: .psql)
+//    migrations.add(migration: User.addUserCardsMigration.self, database: .psql)
     
     services.register(migrations)
     

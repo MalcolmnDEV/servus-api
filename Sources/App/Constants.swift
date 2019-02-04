@@ -11,4 +11,6 @@ struct Constants {
     
     // Routes base url
     static var baseURL = "/api/v1/"
+    
+    static let VAT: Double = 0.15
 }
