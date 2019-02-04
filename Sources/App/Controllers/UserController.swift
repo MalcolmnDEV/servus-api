@@ -111,6 +111,12 @@ final class UserController: RouteCollection {
         let emailAddress = try req.parameters.next(String.self)
         return MailManager.shared.sendEmailTo(emailAddress: emailAddress, usingEmail: .Support, usingRequest: req)
     }
+    
+    // MARK: - Cards
+    
+    func addUserCard(_ req: Request, object: Card) throws -> Future<Card> {
+        return object.save(on: req)
+    }
 }
 
 /// Data required to create a user.

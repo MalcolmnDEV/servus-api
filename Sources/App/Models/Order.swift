@@ -21,11 +21,18 @@ final class Order: PostgreSQLModel, Codable {
     var fluentUpdatedAt: Date?
     var fluentDeletedAt: Date?
     var order_status: OrderStatus
+    var order_items: [Menu_Item]
+    var total: Double = 0.0
     
-    init(id: Int? = nil, userID: User.ID) {
+    init(id: Int? = nil, userID: User.ID, items: [Menu_Item]) {
         self.id = id
         self.user_id = userID
         self.order_status = OrderStatus(rawValue: 0)!
+        self.order_items = items
+        
+        for item in items {
+            self.total = self.total + item.price
+        }
     }
 }
 

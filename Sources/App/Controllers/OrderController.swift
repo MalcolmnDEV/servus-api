@@ -21,6 +21,8 @@ final class OrderController: RouteCollection{
         tokenAuthGroup.post(Order.self ,use: create)
         tokenAuthGroup.get(Order.parameter, use: getWithID)
         tokenAuthGroup.delete("delete", use: delete)
+        
+        tokenAuthGroup.put(Order.parameter, use: updateOrder)
     }
     
     // Controller Functions
